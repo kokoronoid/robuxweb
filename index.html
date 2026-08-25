@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PlansStore</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+
+        <div class="logo">
+            PlansStore
+        </div>
+
+        <div class="nav-menu">
+            <a href="#">Beranda</a>
+            <a href="#">Produk</a>
+            <a href="#">Cara Order</a>
+            <a href="#">FAQ</a>
+        </div>
+
+        <button class="login-btn">
+            Login
+        </button>
+
+    </nav>
+
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <p class="badge">
+                ⚡ Proses Cepat & Aman
+            </p>
+
+            <h1>
+                Beli Robux
+                <span>Lebih Mudah</span>
+            </h1>
+
+            <p class="description">
+                Tempat pembelian Robux dengan proses cepat,
+                aman, dan harga terjangkau.
+            </p>
+
+            <div class="hero-buttons">
+                <button class="primary-btn">
+                    Beli Sekarang
+                </button>
+
+                <button class="secondary-btn">
+                    Lihat Produk
+                </button>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- PRODUCTS -->
+<section class="products">
+
+    <div class="section-title">
+        <p class="small-title">PRODUK</p>
+        <h2>Pilih Paket Robux</h2>
+        <p>Pilih jumlah Robux yang ingin kamu beli.</p>
+    </div>
+
+
+    <div class="product-grid">
+
+        <div class="product-card">
+            <p class="product-name">Starter</p>
+
+            <h3>100 Robux</h3>
+
+            <p class="product-price">
+                Rp17.000
+            </p>
+
+            <button onclick="selectProduct(100, 17000)">
+                Beli Sekarang
+            </button>
+        </div>
+
+
+        <div class="product-card popular">
+
+            <div class="popular-badge">
+                POPULER
+            </div>
+
+            <p class="product-name">Medium</p>
+
+            <h3>500 Robux</h3>
+
+            <p class="product-price">
+                Rp85.000
+            </p>
+
+            <button onclick="selectProduct(500, 85000)">
+                Beli Sekarang
+            </button>
+        </div>
+
+
+        <div class="product-card">
+            <p class="product-name">Premium</p>
+
+            <h3>1.000 Robux</h3>
+
+            <p class="product-price">
+                Rp170.000
+            </p>
+
+            <button onclick="selectProduct(1000, 170000)">
+                Beli Sekarang
+            </button>
+        </div>
+
+    </div>
+
+</section>
+
+<script src="script.js"></script>
+
+<!-- CHECKOUT -->
+<section class="checkout">
+
+    <div class="section-title">
+        <p class="small-title">CHECKOUT</p>
+        <h2>Checkout Pesanan</h2>
+        <p>Lengkapi data sebelum membuat pesanan.</p>
+    </div>
+
+    <div class="checkout-box">
+
+        <div class="form-group">
+            <label>Username Roblox</label>
+            <input
+                type="text"
+                id="username"
+                placeholder="Masukkan username Roblox"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Paket</label>
+
+            <select id="package" onchange="changePackage()">
+                <option value="100">100 Robux - Rp17.000</option>
+                <option value="500">500 Robux - Rp85.000</option>
+                <option value="1000">1.000 Robux - Rp170.000</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Metode Pembayaran</label>
+
+            <select id="payment">
+                <option value="DANA">DANA</option>
+                <option value="QRIS">QRIS</option>
+                <option value="GoPay">GoPay</option>
+            </select>
+        </div>
+
+        <div class="total-box">
+
+            <span>Total Pembayaran</span>
+
+            <strong id="total">
+                Rp17.000
+            </strong>
+
+        </div>
+
+        <button
+            class="checkout-btn"
+            onclick="createOrder()"
+        >
+            Buat Pesanan
+        </button>
+
+    </div>
+
+</section>
+
+</body>
+</html>

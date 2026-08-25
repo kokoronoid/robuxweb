@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Pembayaran - RobuxStore</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+</head>
+
+<body>
+
+    <div class="payment-container">
+
+        <h1>Pembayaran</h1>
+
+        <p>
+            Pesanan kamu berhasil dibuat.
+        </p>
+
+
+        <!-- INFO ORDER -->
+
+        <div
+            id="paymentInfo"
+            class="payment-card">
+
+            Memuat pesanan...
+
+        </div>
+
+
+        <!-- QRIS -->
+
+        <div class="qris-placeholder">
+
+            <h2>QRIS</h2>
+
+            <p>
+                Scan QRIS di bawah untuk melakukan
+                pembayaran.
+            </p>
+
+
+            <div class="qris-box">
+
+                <img
+                    id="qrisImage"
+                    src="qrisaps.png"
+                    alt="QRIS Pembayaran">
+
+            </div>
+
+
+            <p>
+                Pastikan nominal pembayaran sesuai
+                dengan total pesanan.
+            </p>
+
+        </div>
+
+
+        <!-- UPLOAD BUKTI -->
+
+        <div class="upload-proof">
+
+            <h2>
+                Upload Bukti Pembayaran
+            </h2>
+
+            <p>
+                Setelah melakukan pembayaran,
+                upload screenshot bukti pembayaran.
+            </p>
+
+
+            <input
+                type="file"
+                id="proof"
+                accept="image/png,image/jpeg,image/webp">
+
+
+            <button
+                type="button"
+                onclick="uploadProof()">
+
+                Upload Bukti
+
+            </button>
+
+
+            <p id="uploadMessage"></p>
+
+        </div>
+
+
+        <!-- TRACKING -->
+
+        <a
+            id="trackLink"
+            href="track.html"
+            class="track-link">
+
+            Cek Status Pesanan
+
+        </a>
+
+    </div>
+
+
+    <script src="payment.js"></script>
+
+</body>
+
+</html>

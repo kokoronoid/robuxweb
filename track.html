@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Cek Pesanan - RobuxStore</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="track-container">
+
+        <h1>Cek Pesanan</h1>
+
+        <p>
+            Masukkan nomor order untuk melihat status
+            pesanan kamu.
+        </p>
+
+
+        <div class="track-form">
+
+            <input
+                type="number"
+                id="orderId"
+                placeholder="Contoh: 1">
+
+            <button onclick="checkOrder()">
+                Cek Pesanan
+            </button>
+
+        </div>
+
+
+        <div id="result"></div>
+
+    </div>
+
+
+    <script src="track.js"></script>
+
+</body>
+</html>
