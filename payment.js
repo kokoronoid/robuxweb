@@ -1,5 +1,5 @@
 const API_URL =
-    "robuxweb-production-ccf7.up.railway.app";
+    "plansstore-rbx.up.railway.app";
 
 
 // =====================

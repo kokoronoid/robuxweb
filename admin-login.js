@@ -22,7 +22,7 @@ async function login() {
     try {
 
         const response = await fetch(
-            "robuxweb-production-ccf7.up.railway.app",
+            "plansstore-rbx.up.railway.app",
             {
                 method: "POST",
 
