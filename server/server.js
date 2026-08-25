@@ -4,13 +4,14 @@ const mysql = require("mysql2/promise");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-const JWT_SECRET = "ROBuxStore_SECRET_GANTI_NANTI";
-
+const JWT_SECRET =
+    process.env.JWT_SECRET || "ROBuxStore_SECRET_GANTI_NANTI";
 
 // =====================
 // MIDDLEWARE
@@ -20,67 +21,104 @@ app.use(cors());
 
 app.use(express.json());
 
-const storage = multer.diskStorage({
 
-    destination: (req, file, cb) => {
-        cb(null, "uploads/");
-    },
+// =====================
+// UPLOAD DIRECTORY
+// =====================
 
-    filename: (req, file, cb) => {
+const uploadDir =
+    path.join(__dirname, "uploads");
 
-        const extension =
-            path.extname(file.originalname);
+if (!fs.existsSync(uploadDir)) {
 
-        cb(
-            null,
-            `proof-${Date.now()}${extension}`
-        );
-    }
+    fs.mkdirSync(uploadDir, {
+        recursive: true
+    });
 
-});
+}
 
 
-const upload = multer({
+// =====================
+// MULTER
+// =====================
 
-    storage: storage,
+const storage =
+    multer.diskStorage({
 
-    limits: {
-        fileSize: 5 * 1024 * 1024
-    },
+        destination: (req, file, cb) => {
 
-    fileFilter: (req, file, cb) => {
+            cb(null, uploadDir);
 
-        const allowedTypes = [
-            "image/jpeg",
-            "image/png",
-            "image/webp"
-        ];
+        },
 
-        if (
-            allowedTypes.includes(file.mimetype)
-        ) {
+        filename: (req, file, cb) => {
 
-            cb(null, true);
-
-        } else {
+            const extension =
+                path.extname(
+                    file.originalname
+                );
 
             cb(
-                new Error(
-                    "File harus JPG, PNG, atau WEBP."
-                )
+                null,
+                `proof-${Date.now()}${extension}`
             );
 
         }
-    }
 
-});
+    });
 
+
+const upload =
+    multer({
+
+        storage: storage,
+
+        limits: {
+            fileSize:
+                5 * 1024 * 1024
+        },
+
+        fileFilter:
+            (req, file, cb) => {
+
+                const allowedTypes = [
+
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp"
+
+                ];
+
+                if (
+                    allowedTypes.includes(
+                        file.mimetype
+                    )
+                ) {
+
+                    cb(null, true);
+
+                } else {
+
+                    cb(
+                        new Error(
+                            "File harus JPG, PNG, atau WEBP."
+                        )
+                    );
+
+                }
+
+            }
+
+    });
+
+
+// =====================
+// STATIC UPLOADS
+// =====================
 
 app.use(
     "/uploads",
-    express.static(
-        path.join(__dirname, "uploads")
-    )
+    express.static(uploadDir)
 );
 
 
@@ -88,23 +126,39 @@ app.use(
 // MYSQL
 // =====================
 
-const db = mysql.createPool({
+const db =
+    mysql.createPool({
 
-    host: "localhost",
+        host:
+            process.env.DB_HOST ||
+            "localhost",
 
-    user: "root",
+        user:
+            process.env.DB_USER ||
+            "root",
 
-    password: "",
+        password:
+            process.env.DB_PASSWORD ||
+            "",
 
-    database: "robuxstore",
+        database:
+            process.env.DB_NAME ||
+            "robuxstore",
 
-    waitForConnections: true,
+        port:
+            process.env.DB_PORT ||
+            3306,
 
-    connectionLimit: 10,
+        waitForConnections:
+            true,
 
-    queueLimit: 0
+        connectionLimit:
+            10,
 
-});
+        queueLimit:
+            0
+
+    });
 
 
 // =====================
@@ -142,8 +196,10 @@ app.get(
             console.error(error);
 
             res.status(500).json({
+
                 message:
                     "Gagal mengambil produk."
+
             });
 
         }
@@ -176,8 +232,10 @@ app.post(
             ) {
 
                 return res.status(400).json({
+
                     message:
                         "Data order belum lengkap."
+
                 });
 
             }
@@ -186,18 +244,24 @@ app.post(
             const [products] =
                 await db.execute(
 
-                    "SELECT * FROM products WHERE id = ?",
+                    `SELECT *
+                     FROM products
+                     WHERE id = ?`,
 
                     [product_id]
 
                 );
 
 
-            if (products.length === 0) {
+            if (
+                products.length === 0
+            ) {
 
                 return res.status(404).json({
+
                     message:
                         "Produk tidak ditemukan."
+
                 });
 
             }
@@ -222,12 +286,19 @@ app.post(
                     VALUES (?, ?, ?, ?, ?, ?)`,
 
                     [
+
                         username,
+
                         product.id,
+
                         product.robux,
+
                         product.price,
+
                         payment,
+
                         "PENDING"
+
                     ]
 
                 );
@@ -324,7 +395,8 @@ app.get(
                         price,
                         payment,
                         status,
-                        created_at
+                        created_at,
+                        payment_proof
                      FROM orders
                      WHERE id = ?`,
 
@@ -333,7 +405,9 @@ app.get(
                 );
 
 
-            if (orders.length === 0) {
+            if (
+                orders.length === 0
+            ) {
 
                 return res.status(404).json({
 
@@ -345,7 +419,9 @@ app.get(
             }
 
 
-            res.json(orders[0]);
+            res.json(
+                orders[0]
+            );
 
 
         } catch (error) {
@@ -404,7 +480,8 @@ app.post(
                 JWT_SECRET,
 
                 {
-                    expiresIn: "2h"
+                    expiresIn:
+                        "2h"
                 }
 
             );
@@ -598,6 +675,7 @@ app.put(
     }
 );
 
+
 // =====================
 // UPLOAD PAYMENT PROOF
 // =====================
@@ -609,63 +687,97 @@ app.post(
 
         try {
 
-            const orderId = req.params.id;
+            const orderId =
+                req.params.id;
+
 
             if (!req.file) {
 
                 return res.status(400).json({
+
                     message:
                         "Bukti pembayaran wajib diupload."
+
                 });
 
             }
 
-            const [orders] = await db.execute(
-                `SELECT id, status
-                 FROM orders
-                 WHERE id = ?`,
-                [orderId]
-            );
 
-            if (orders.length === 0) {
+            const [orders] =
+                await db.execute(
+
+                    `SELECT
+                        id,
+                        status
+                     FROM orders
+                     WHERE id = ?`,
+
+                    [orderId]
+
+                );
+
+
+            if (
+                orders.length === 0
+            ) {
 
                 return res.status(404).json({
+
                     message:
                         "Order tidak ditemukan."
+
                 });
 
             }
 
-            const order = orders[0];
 
-            if (order.status === "COMPLETED") {
+            const order =
+                orders[0];
+
+
+            if (
+                order.status ===
+                "COMPLETED"
+            ) {
 
                 return res.status(400).json({
+
                     message:
                         "Order ini sudah selesai."
+
                 });
 
             }
+
 
             const filePath =
                 `/uploads/${req.file.filename}`;
 
+
             await db.execute(
+
                 `UPDATE orders
                  SET payment_proof = ?
                  WHERE id = ?`,
+
                 [
                     filePath,
                     orderId
                 ]
+
             );
 
+
             res.json({
+
                 message:
                     "Bukti pembayaran berhasil diupload.",
+
                 file:
                     filePath
+
             });
+
 
         } catch (error) {
 
@@ -674,9 +786,12 @@ app.post(
                 error
             );
 
+
             res.status(500).json({
+
                 message:
                     "Gagal mengupload bukti pembayaran."
+
             });
 
         }
@@ -684,19 +799,69 @@ app.post(
     }
 );
 
+
+// =====================
+// MULTER ERROR HANDLER
+// =====================
+
+app.use(
+    (error, req, res, next) => {
+
+        if (
+            error instanceof multer.MulterError
+        ) {
+
+            if (
+                error.code ===
+                "LIMIT_FILE_SIZE"
+            ) {
+
+                return res.status(400).json({
+
+                    message:
+                        "Ukuran file maksimal 5 MB."
+
+                });
+
+            }
+
+        }
+
+
+        if (error) {
+
+            return res.status(400).json({
+
+                message:
+                    error.message
+
+            });
+
+        }
+
+
+        next();
+
+    }
+);
+
+
 // =====================
 // START SERVER
 // =====================
 
 app.listen(
     PORT,
+    "0.0.0.0",
     () => {
 
         console.log(
-            `Server berjalan di http://localhost:${PORT}`
+            `Server berjalan di port ${PORT}`
         );
 
+
         db.getConnection()
+
             .then(connection => {
 
                 console.log(
@@ -706,6 +871,7 @@ app.listen(
                 connection.release();
 
             })
+
             .catch(error => {
 
                 console.error(
